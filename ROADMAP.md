@@ -1,10 +1,10 @@
-# pgxray — Roadmap & TODO
+# pgxray - Roadmap & TODO
 
 Status legend: `[ ]` todo · `[~]` in progress · `[x]` done
 
 ---
 
-## Phase 0 — Project skeleton
+## Phase 0 - Project skeleton
 
 - [ ] `go mod init`
 - [ ] Directory structure (see below)
@@ -37,7 +37,7 @@ pgxray/
 
 ---
 
-## Phase 1 — Config & connection
+## Phase 1 - Config & connection
 
 - [ ] Define config struct (`Config`, `ConnectionProfile`, `Keybindings`)
 - [ ] Parse `config.toml` with `github.com/BurntSushi/toml`
@@ -58,7 +58,7 @@ pgxray/
 
 ---
 
-## Phase 2 — Navigation tree (sidebar)
+## Phase 2 - Navigation tree (sidebar)
 
 The sidebar is the backbone of the UX. It's a collapsible tree:
 
@@ -82,7 +82,7 @@ The sidebar is the backbone of the UX. It's a collapsible tree:
 
 ---
 
-## Phase 3 — Table data viewer
+## Phase 3 - Table data viewer
 
 - [ ] Fetch rows with `LIMIT`/`OFFSET` pagination
 - [ ] Detect column types, align values accordingly (numbers right, strings left)
@@ -92,17 +92,17 @@ The sidebar is the backbone of the UX. It's a collapsible tree:
 - [ ] Column header stays fixed while scrolling rows
 - [ ] NULL values displayed distinctly (e.g. dimmed `∅`)
 - [ ] Sort by column (`s` to toggle asc/desc)
-- [ ] Copy cell value to clipboard (`y`) — best-effort, may depend on terminal
+- [ ] Copy cell value to clipboard (`y`) - best-effort, may depend on terminal
 
 ---
 
-## Phase 4 — Structure view
+## Phase 4 - Structure view
 
 Activated with `d` on any table/view.
 
 - [ ] **Columns tab**: name, type, nullable, default, comment
 - [ ] **Indexes tab**: name, columns, unique, partial condition
-- [ ] **Constraints tab**: PK, FK, CHECK, UNIQUE — with referenced tables for FKs
+- [ ] **Constraints tab**: PK, FK, CHECK, UNIQUE - with referenced tables for FKs
 - [ ] **DDL tab**: rendered `CREATE TABLE` statement (query `pg_get_tabledef` or reconstruct)
 - [ ] Tab switching with `Tab` / `Shift+Tab` or number keys `1`–`4`
 - [ ] For views: show the view definition SQL
@@ -110,7 +110,7 @@ Activated with `d` on any table/view.
 
 ---
 
-## Phase 5 — SQL query mode
+## Phase 5 - SQL query mode
 
 - [ ] Prompt opens with `:`, multi-line input
 - [ ] Wrap execution: `BEGIN; SET TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY; ... ROLLBACK;`
@@ -122,20 +122,20 @@ Activated with `d` on any table/view.
 
 ---
 
-## Phase 6 — Polish & UX
+## Phase 6 - Polish & UX
 
 - [ ] Help overlay (`?`) listing all keybindings
 - [ ] Status bar at the bottom: connection info, current location, row count, page
 - [ ] Breadcrumb header: `myapp > public > users`
 - [ ] Responsive layout: adapt to terminal width/height on resize
 - [ ] Meaningful loading indicators (spinner while queries run)
-- [ ] Consistent color theme via lipgloss — consider supporting light/dark terminal backgrounds
+- [ ] Consistent color theme via lipgloss - consider supporting light/dark terminal backgrounds
 - [ ] Graceful handling of lost DB connection (reconnect prompt)
 - [ ] `--version` flag
 
 ---
 
-## Phase 7 — Packaging & distribution
+## Phase 7 - Packaging & distribution
 
 - [ ] GitHub Actions: build binaries for `linux/amd64`, `linux/arm64`, `darwin/amd64`, `darwin/arm64`
 - [ ] Attach binaries to GitHub Releases

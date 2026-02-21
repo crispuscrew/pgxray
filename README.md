@@ -1,6 +1,6 @@
 # pgxray
 
-A fast, keyboard-driven TUI for exploring PostgreSQL databases — designed to run **on the server**, accessed over SSH. No local client setup, no port forwarding, no data leaving the host.
+A fast, keyboard-driven TUI for exploring PostgreSQL databases - designed to run **on the server**, accessed over SSH. No local client setup, no port forwarding, no data leaving the host.
 
 ```
 ssh user@myserver pgxray
@@ -12,7 +12,7 @@ ssh user@myserver pgxray
 
 - **Read-only by design.** pgxray is a viewer, not an editor. It will never modify your data.
 - **SSH-native.** The binary runs on the database host. Your terminal is just a window.
-- **Safe queries.** Ad-hoc SQL runs inside a `REPEATABLE READ` transaction on a read-only connection — you see a consistent snapshot and cannot accidentally mutate anything.
+- **Safe queries.** Ad-hoc SQL runs inside a `REPEATABLE READ` transaction on a read-only connection - you see a consistent snapshot and cannot accidentally mutate anything.
 - **Keyboard first.** Every action has a keybinding. The mouse is never required.
 
 ---
@@ -45,7 +45,7 @@ Or download a prebuilt binary from [Releases](https://github.com/crispuscrew/pgx
 pgxray reads `~/.config/pgxray/config.toml` by default.
 
 ```toml
-# Default profile — used when no --profile flag is given
+# Default profile - used when no --profile flag is given
 [connections.default]
 host     = "localhost"
 port     = 5432
@@ -69,7 +69,7 @@ pgpassfile = "/etc/pgxray/pgpass"   # optional: override pgpass location per pro
 3. `~/.config/pgxray/config.toml`
 4. `~/.pgxray.toml`
 
-**Passwords** — resolved in this order:
+**Passwords** - resolved in this order:
 
 1. `PGPASSWORD` environment variable
 2. pgpass file (first match wins):
@@ -77,7 +77,7 @@ pgpassfile = "/etc/pgxray/pgpass"   # optional: override pgpass location per pro
    - `pgpassfile` field in the connection profile
    - `PGPASSFILE` environment variable
    - `~/.pgpass` (default fallback)
-3. Interactive prompt — if no password is found anywhere, pgxray asks for it at startup
+3. Interactive prompt - if no password is found anywhere, pgxray asks for it at startup
 
 Plaintext passwords in config are intentionally not supported.
 
@@ -136,7 +136,7 @@ pgxray --host localhost --port 5432 --user postgres --database myapp
 Press `:` to open the query prompt. Queries run inside a `REPEATABLE READ` transaction on a read-only connection:
 
 ```sql
--- This is safe — pgxray wraps it automatically:
+-- This is safe - pgxray wraps it automatically:
 -- BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY;
 -- <your query>
 -- ROLLBACK;
