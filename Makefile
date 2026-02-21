@@ -1,8 +1,7 @@
-RUNTIME   := $(shell which podman 2>/dev/null || which docker)
-BINARY    := pgxray
-CMD       := ./cmd/pgxray
-BUILD_DIR := ./bin
-SRC       := src
+RUNTIME    := $(shell which podman 2>/dev/null || which docker)
+BINARY     := pgxray
+CMD        := ./src/cmd/pgxray
+BUILD_DIR  := ./bin
 IMAGE_DEV  := pgxray-dev
 IMAGE_LINT := pgxray-lint
 
@@ -16,18 +15,18 @@ image-dev:
 image-lint: image-dev
 	$(RUNTIME) build -f container/lint/Containerfile -t $(IMAGE_LINT) .
 
-tidy: image-dev
-	$(RUNTIME) run --rm $(IMAGE_DEV) go mod tidy
+tidy:
+	go mod tidy
 
 build: image-dev
 	$(RUNTIME) run --rm -v $(PWD)/$(BUILD_DIR):/out $(IMAGE_DEV) \
 		go build -o /out/$(BINARY) $(CMD)
 
 test: image-dev
-	$(RUNTIME) run --rm $(IMAGE_DEV) go test ./...
+	$(RUNTIME) run --rm $(IMAGE_DEV) go test ./src/...
 
 lint: image-lint
-	$(RUNTIME) run --rm $(IMAGE_LINT) golangci-lint run ./...
+	$(RUNTIME) run --rm $(IMAGE_LINT) golangci-lint run ./src/...
 
 run:
 	./$(BUILD_DIR)/$(BINARY)
