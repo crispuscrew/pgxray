@@ -33,7 +33,7 @@ ssh user@myserver pgxray
 
 ```bash
 # On the server
-go install github.com/crispuscrew/pgxray@latest
+go install github.com/crispuscrew/pgxray/cmd/pgxray@latest
 ```
 
 Or download a prebuilt binary from [Releases](https://github.com/crispuscrew/pgxray/releases) and place it somewhere in `$PATH` on the server.
