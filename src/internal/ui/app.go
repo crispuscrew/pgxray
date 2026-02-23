@@ -1,3 +1,4 @@
+// Package ui provides a terminal user interface for pgxray.
 package ui
 
 import (

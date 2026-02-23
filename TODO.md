@@ -1,0 +1,2 @@
+- [ ] Implement cfg.go
+- [ ] Implement keybind stub in ui

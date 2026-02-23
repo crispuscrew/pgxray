@@ -42,16 +42,32 @@ Or download a prebuilt binary from [Releases](https://github.com/crispuscrew/pgx
 
 ## Configuration
 
-pgxray reads `~/.config/pgxray/config.toml` by default.
+pgxray reads `~/.config/pgxray/config.toml` by default. Use `--config` to specify a different path.
+
+Config file locations (checked in order):
+
+1. `--config /path/to/config.toml`
+2. `$PGXRAY_CONFIG`
+3. `~/.config/pgxray/config.toml`
+4. `~/.pgxray.toml`
+
+### Profiles
+
+A profile is a named connection configuration. Profile selection order:
+
+1. `--profile` flag if provided
+2. Profile named `default` in the config file
+3. First profile in the config file
+
+All profile fields can be overridden via the corresponding CLI flag. Run `pgxray --help` for the full flag reference.
 
 ```toml
-# Default profile - used when no --profile flag is given
 [connections.default]
-host     = "localhost"
-port     = 5432
-user     = "postgres"
-database = "postgres"
-sslmode  = "disable"
+host      = "localhost"
+port      = 5432
+user      = "postgres"
+database  = "postgres"
+sslmode   = "disable"
 
 [connections.prod]
 host       = "127.0.0.1"
@@ -59,37 +75,20 @@ port       = 5432
 user       = "readonly"
 database   = "myapp"
 sslmode    = "require"
-pgpassfile = "/etc/pgxray/pgpass"   # optional: override pgpass location per profile
+pgpassfile = "/etc/pgxray/pgpass"
 ```
-
-**Config file locations** (checked in order):
-
-1. Path given by `--config /path/to/config.toml`
-2. `$PGXRAY_CONFIG`
-3. `~/.config/pgxray/config.toml`
-4. `~/.pgxray.toml`
 
 **Passwords** - resolved in this order:
 
 1. `PGPASSWORD` environment variable
 2. pgpass file (first match wins):
-   - `--pgpassfile /path/to/file` CLI flag
-   - `pgpassfile` field in the connection profile
+   - `--pgpassfile` CLI flag
+   - `pgpassfile` field in the active profile
    - `PGPASSFILE` environment variable
-   - `~/.pgpass` (default fallback)
-3. Interactive prompt - if no password is found anywhere, pgxray asks for it at startup
+   - `~/.pgpass`
+3. Interactive prompt at startup
 
 Plaintext passwords in config are intentionally not supported.
-
-### CLI overrides
-
-Any config value can be overridden at runtime:
-
-```bash
-pgxray --profile prod
-pgxray --host localhost --port 5433 --user alice --database staging
-pgxray --config /etc/pgxray/config.toml --profile prod
-```
 
 ---
 
@@ -119,14 +118,14 @@ pgxray --config /etc/pgxray/config.toml --profile prod
 ## Usage
 
 ```bash
-# Connect using default profile
+# Use default profile
 pgxray
 
-# Connect using a named profile
+# Use named profile
 pgxray --profile prod
 
-# One-off connection without a config file
-pgxray --host localhost --port 5432 --user postgres --database myapp
+# Custom config, then override a field
+pgxray --config /etc/pgxray/config.toml --profile prod --database staging
 ```
 
 ---
