@@ -8,10 +8,11 @@ import (
 	"github.com/crispuscrew/pgxray/src/internal/cfg"
 	"github.com/crispuscrew/pgxray/src/internal/opt"
 
-	"github.com/spf13/cobra"
 	"log"
 	"reflect"
 	"strings"
+
+	"github.com/spf13/cobra"
 )
 
 var rootCmd = &cobra.Command{                                                                                          
@@ -23,30 +24,22 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	t := reflect.TypeOf(cfg.Profile{}) 
-	flags := rootCmd.Flags()                                         
-																	
-	for i := range t.NumField() {
-		field := t.Field(i)
-		tag := field.Tag.Get("cli")
-		if tag == "" {
-			continue
-		}
+	flags := rootCmd.Flags()
 
-		parts := strings.SplitN(tag, ",", 3)
-		name, shorthand, desc := parts[0], parts[1], parts[2]
-
-		innerKind := field.Type.Field(0).Type.Kind()
+	
+	forEachCliField(&cfg.Profile{}, func(field cfg.Field, name, shorthand, desc string) {
+		innerKind := field.Meta.Type.Field(0).Type.Kind()
 		switch innerKind {
 		case reflect.String:
 			flags.StringP(name, shorthand, "", desc)
 		case reflect.Int:
 			flags.IntP(name, shorthand, 0, desc)
 		}
-	}
+	})
 
-	flags.StringP("config",  "c", "", "path to config file")
-	flags.StringP("profile", "p", "", "connection profile to use")
+	flags.StringP("config",  	"c", "", "path to config file")
+	flags.StringP("profile", 	"p", "", "connection profile to use")
+	flags.StringP("keybinds",	"k", "", "path to keybinds file")
 }
 
 func Execute() (cfg.CliConfig) {
@@ -63,32 +56,41 @@ func Execute() (cfg.CliConfig) {
 
 func buildConfig(cmd *cobra.Command) cfg.CliConfig {
 	var config cfg.CliConfig
-	overrideVal := reflect.ValueOf(&config.ProfileOverride).Elem()                     
-	fields := reflect.VisibleFields(reflect.TypeOf(cfg.CliConfig.ProfileOverride{}))       
-									
-	for i, field := range fields {
-		tag := field.Tag.Get("cli")
-		name := strings.SplitN(tag, ",", 3)[0]
-		if tag == "" || !cmd.Flags().Changed(name) { continue }
+	forEachCliField(&config.ProfileOverride, func(field cfg.Field, name, shorthand, desc string) {
+		if !cmd.Flags().Changed(name) { return }
 
-		innerKind := field.Type.Field(0).Type.Kind()
+		innerKind := field.Meta.Type.Field(0).Type.Kind()
 		switch innerKind {
 		case reflect.String:
-			v, _ := cmd.Flags().GetString(name)
-			overrideVal.Field(i).Set(reflect.ValueOf(opt.Set(v)))
+			v, _ := cmd.Flags().GetString(name) // Ignore error since flag existence is already checked
+			field.Value.Set(reflect.ValueOf(opt.Set(v)))
 		case reflect.Int:
-			v, _ := cmd.Flags().GetInt(name)
-			overrideVal.Field(i).Set(reflect.ValueOf(opt.Set(v)))
+			v, _ := cmd.Flags().GetInt(name) // Ignore error since flag existence is already checked
+			field.Value.Set(reflect.ValueOf(opt.Set(v)))
 		}
-	}
+	})
 
 	if cmd.Flags().Changed("config") {
-		cfgPath, _ := cmd.Flags().GetString("config")
+		cfgPath, _ := cmd.Flags().GetString("config") // Ignore error since flag existence is already checked
 		config.ConfigPath = opt.Set(cfgPath)
 	}
 	if cmd.Flags().Changed("profile") {
-		profileName, _ := cmd.Flags().GetString("profile")
+		profileName, _ := cmd.Flags().GetString("profile") // Ignore error since flag existence is already checked
 		config.ProfileName = opt.Set(profileName)
 	}
+	if cmd.Flags().Changed("keybinds") {
+		keybindsPath, _ := cmd.Flags().GetString("keybinds") // Ignore error since flag existence is already checked
+		config.KeybindsPath = opt.Set(keybindsPath)
+	}
 	return config
+}
+
+func forEachCliField(p *cfg.Profile, fn func(field cfg.Field, name, shorthand, desc string)) {
+	cfg.ForEachField(p, func(field cfg.Field) {
+		tag := field.Meta.Tag.Get("cli")
+		if tag == "" { return }
+
+		parts := strings.SplitN(tag, ",", 3)
+		fn(field, parts[0], parts[1], parts[2])
+	})
 }

@@ -2,11 +2,13 @@
 package ui
 
 import (
+	"github.com/crispuscrew/pgxray/src/internal/cfg"
+
 	tea "github.com/charmbracelet/bubbletea"
 	"log"
 )
 
-func RunUI(/*cfg config.Config*/) {
+func RunUI(profile cfg.Profile, keybinds cfg.Keybinds, warnings []string) {
 	p := tea.NewProgram(model{})
 	if _, err := p.Run(); err != nil {
 		log.Fatalf("could not start UI: %v", err)

@@ -8,6 +8,6 @@ import (
 
 func main() {
 	cfgByCli := cli.Execute()
-	cfg := cfg.BuildConfig(cfgByCli)
-	ui.RunUI(cfg)
+	profile, keybinds, warnings := cfg.BuildConfig(cfgByCli)
+	ui.RunUI(profile, keybinds, warnings)
 }

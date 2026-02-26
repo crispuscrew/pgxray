@@ -49,7 +49,6 @@ Config file locations (checked in order):
 1. `--config /path/to/config.toml`
 2. `$PGXRAY_CONFIG`
 3. `~/.config/pgxray/config.toml`
-4. `~/.pgxray.toml`
 
 ### Profiles
 
@@ -57,7 +56,6 @@ A profile is a named connection configuration. Profile selection order:
 
 1. `--profile` flag if provided
 2. Profile named `default` in the config file
-3. First profile in the config file
 
 All profile fields can be overridden via the corresponding CLI flag. Run `pgxray --help` for the full flag reference.
 

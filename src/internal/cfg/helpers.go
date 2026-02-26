@@ -1,0 +1,57 @@
+package cfg
+
+import (
+	"reflect"
+	"os"
+	"path/filepath"
+	"fmt"
+	"strings"
+
+	"github.com/charmbracelet/bubbles/key"
+)
+
+type Field struct {
+	Value reflect.Value
+	Meta  reflect.StructField
+}
+
+func ForEachField[T any](val *T, fn func(field Field)) {
+	v := reflect.ValueOf(val).Elem()
+	for i := 0; i < v.NumField(); i++ {
+		fn(Field{Value: v.Field(i), Meta: v.Type().Field(i)})
+	}
+}
+
+func ForEachFieldPair[T any](a, b *T, fn func(a, b Field)) {                                                                                              
+	av := reflect.ValueOf(a).Elem()                                                                                                                
+	bv := reflect.ValueOf(b).Elem()                                                                                                                
+	t := reflect.TypeOf(*a)
+	for i := range av.NumField() {
+		fn(
+			Field{av.Field(i), t.Field(i)},
+			Field{bv.Field(i), t.Field(i)},
+		)
+	}
+}
+
+func resolvePath(path string) (string, error) {                                                                                                    
+	if strings.HasPrefix(path, "~/") {                                                                                                             
+		home, err := os.UserHomeDir()                                                                                                              
+		if err != nil {
+			return "", fmt.Errorf("resolvePath: %w", err)
+		}
+		return filepath.Join(home, path[2:]), nil
+	}
+	return filepath.Abs(path)
+}
+
+func (kb *Keybind) UnmarshalTOML(fn func(any) error) error {
+	var keys []string
+	if err := fn(&keys); err != nil {
+		return err
+	}
+	*kb = Keybind{
+		key.NewBinding(key.WithKeys(keys...)),
+	}
+	return nil
+}
