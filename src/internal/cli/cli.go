@@ -22,7 +22,7 @@ var rootCmd = &cobra.Command{
 		return nil
 	},
 }
-
+// TODO Implement init CLI command to generate default config and keybinds files
 func init() {
 	flags := rootCmd.Flags()
 

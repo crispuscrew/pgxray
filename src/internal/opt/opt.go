@@ -14,16 +14,10 @@ func Set[T any](val T) Opt[T] {
 	}
 }
 
-func IsSet[T any](opt Opt[T]) bool {return opt.Set}
-func Get[T any](opt Opt[T]) T {return opt.Value}
+func (opt Opt[T]) IsSet() 	bool 	{ return opt.Set 	}
+func (opt Opt[T]) Get() 	T 		{ return opt.Value 	}
 
-func (origin Opt[T]) Override(override Opt[T]) Opt[T] {
-	if override.Set {
-		return override
-	}
-	return origin
-}
-
+// UnmarshalTOML implements the toml.Unmarshaler interface, allowing Opt[T] to be used directly in TOML decoding
 func (option *Opt[T]) UnmarshalTOML(fn func(any) error) error {
 	var val T
 	if err := fn(&val); err != nil {

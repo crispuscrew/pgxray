@@ -16,12 +16,12 @@ type CliConfig struct {
 type Profile struct {
 	Name       	string 	`toml:"name"`
 
-	Host     	opt.Opt[string]	`toml:"host" 		cli:"host,H, override profile host"`
-	Port     	opt.Opt[int   ]	`toml:"port" 		cli:"port,P, override profile port"`
-	User     	opt.Opt[string]	`toml:"user" 		cli:"user,u, override profile user"`
-	Database 	opt.Opt[string]	`toml:"database" 	cli:"database,d, override profile database"`
-	SslMode  	opt.Opt[string]	`toml:"sslmode" 	cli:"sslmode,,override profile sslmode (disable|require|verify-ca|verify-full)"`
-	PgpassFile 	opt.Opt[string]	`toml:"pgpassfile" 	cli:"pgpassfile,,override profile pgpassfile path"`
+	Host     	opt.Opt[string]	`toml:"host" cli:"host,H, override profile host"`
+	Port     	opt.Opt[int   ]	`toml:"port" cli:"port,P, override profile port"`
+	User     	opt.Opt[string]	`toml:"user" cli:"user,u, override profile user"`
+	Database 	opt.Opt[string]	`toml:"database" cli:"database,d, override profile database"`
+	SslMode  	opt.Opt[string]	`toml:"sslmode" cli:"sslmode,,override profile sslmode (disable|require|verify-ca|verify-full)"`
+	PgpassFile 	opt.Opt[string]	`toml:"pgpassfile" cli:"pgpassfile,,override profile pgpassfile path"`
 }
 
 type Keybind []key.Binding
@@ -41,7 +41,7 @@ type Keybinds struct {
 	GoToBottom 	opt.Opt[Keybind]	`toml:"go_to_bottom"`
 
 	ViewDDL 	opt.Opt[Keybind]	`toml:"view_ddl"`
-	ViewIndexs 	opt.Opt[Keybind]	`toml:"view_indexes"`
+	ViewIndexes	opt.Opt[Keybind]	`toml:"view_indexes"`
 	OpenPrompt 	opt.Opt[Keybind]	`toml:"open_prompt"`
 
 	NextPage 	opt.Opt[Keybind]	`toml:"next_page"`

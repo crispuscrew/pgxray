@@ -92,7 +92,7 @@ var defaultKeybinds = Keybinds{
 			key.WithHelp("d", "view DDL"),
 		),
 	}),
-	ViewIndexs: opt.Set(Keybind{
+	ViewIndexes: opt.Set(Keybind{
 		key.NewBinding(
 			key.WithKeys("i"),
 			key.WithHelp("i", "view indexes"),

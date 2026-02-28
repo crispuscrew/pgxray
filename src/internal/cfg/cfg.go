@@ -2,72 +2,55 @@
 package cfg
 
 import (
-	"github.com/crispuscrew/pgxray/src/internal/opt"
-
 	"log"
 	"os"
 	"fmt"
+	"errors"
 
 	toml "github.com/pelletier/go-toml/v2"
 )
 
+var ErrFileNotFound = errors.New("File not found")
 func BuildConfig(cliOverride CliConfig) (Profile, Keybinds, []string) {
 	profile := defaultProfile
 	keybinds := defaultKeybinds
 	var warnings []string
 
-	configPath, err := resolveConfigPath(cliOverride.ConfigPath)
-	if err != nil {
-		warnings = append(warnings, err.Error())
+	if cliOverride.ProfileName.IsSet() {
+		profile.Name = cliOverride.ProfileName.Get()
 	}
 
-	keybindsPath, err := resolveKeybindsPath(cliOverride.KeybindsPath)
+	configPath, err := resolvePath(cliOverride.ConfigPath, configPathEnvVar, defaultConfigPath)
 	if err != nil {
 		warnings = append(warnings, err.Error())
-	}
-
-	if opt.IsSet(cliOverride.ProfileName) {
-		profile.Name = opt.Get(cliOverride.ProfileName)
 	}
 
 	prFromFile, err := profileFromFile(configPath, profile.Name)
-	if err != nil {
+	if errors.Is(err, ErrFileNotFound) {
+		warnings = append(warnings, err.Error())
+	} else if err != nil {
 		log.Fatalf("could not load profile from file: %v", err)
+	} else {
+		profile = merge(profile, prFromFile)
 	}
-	profile = merge(merge(prFromFile, profile), cliOverride.ProfileOverride)
 
-	kbFromFile, err := keybindsFromFile(keybindsPath)
+	profile = merge(profile, cliOverride.ProfileOverride)
+
+	keybindsPath, err := resolvePath(cliOverride.KeybindsPath, keybindsPathEnvVar, defaultKeybindsPath)
 	if err != nil {
 		warnings = append(warnings, err.Error())
+	}
+
+	kbFromFile, err := keybindsFromFile(keybindsPath)
+	if errors.Is(err, ErrFileNotFound) {
+		warnings = append(warnings, err.Error())
+	} else if err != nil {
+		log.Fatalf("could not load keybinds from file: %v", err)
 	} else {
 		keybinds = merge(keybinds, kbFromFile)
 	}
 
 	return profile, keybinds, warnings
-}
-
-func resolveConfigPath(cliPath opt.Opt[string]) (string, error) {
-	if opt.IsSet(cliPath) {
-		return resolvePath(opt.Get(cliPath))
-	}
-	if os.Getenv(configPathEnvVar) != "" {
-		return resolvePath(os.Getenv(configPathEnvVar))
-	}
-	//Always can resolve to default path, so ignore error
-	path, _ := resolvePath(defaultConfigPath)
-	return path, fmt.Errorf("warning: could not resolve config path: %v, using defaults and CLI overrides", cliPath)
-}
-
-func resolveKeybindsPath(cliPath opt.Opt[string]) (string, error) {
-	if opt.IsSet(cliPath) {
-		return resolvePath(opt.Get(cliPath))
-	}
-	if os.Getenv(keybindsPathEnvVar) != "" {
-		return resolvePath(os.Getenv(keybindsPathEnvVar))
-	}
-	//Always can resolve to default path, so ignore error
-	path, _ := resolvePath(defaultKeybindsPath)
-	return path, fmt.Errorf("warning: could not resolve keybinds path: %v, using defaults and CLI overrides", cliPath)
 }
 
 func profileFromFile(path, profileName string) (Profile, error) {
@@ -76,9 +59,12 @@ func profileFromFile(path, profileName string) (Profile, error) {
 	}
 	var fc fileConfig
 	data, err := os.ReadFile(path)
-	if err != nil {                                                                                                                                    
+	if errors.Is(err, os.ErrNotExist) {                                                                                                                                
+		return Profile{}, fmt.Errorf("could not read config file, %w: %w, fallback to default value", ErrFileNotFound, err)
+	} else if err != nil {
 		return Profile{}, fmt.Errorf("could not read config file: %w", err)
 	}
+
 	if err := toml.Unmarshal(data, &fc); err != nil {
 		return Profile{}, fmt.Errorf("could not parse config file: %w", err)
 	}
@@ -94,20 +80,14 @@ func profileFromFile(path, profileName string) (Profile, error) {
 func keybindsFromFile(path string) (Keybinds, error) {
 	var kb Keybinds
 	data, err := os.ReadFile(path)
-	if err != nil {                                                                                                                                    
+	if errors.Is(err, os.ErrNotExist) {                                                                                                                                    
+		return Keybinds{}, fmt.Errorf("could not read keybinds file, %w: %w", ErrFileNotFound, err)
+	} else if err != nil {
 		return Keybinds{}, fmt.Errorf("could not read keybinds file: %w", err)
 	}
+
 	if err := toml.Unmarshal(data, &kb); err != nil {
 		return Keybinds{}, fmt.Errorf("could not parse keybinds file: %w", err)
 	}
 	return kb, nil
-}
-
-func merge[T any](base, override T) T {
-	ForEachFieldPair(&base, &override, func(field, overrideField Field) {
-		if set := overrideField.Value.FieldByName("Set"); set.IsValid() && set.Bool() {
-			field.Value.Set(overrideField.Value)
-		}
-	})
-	return base
 }
