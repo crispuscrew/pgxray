@@ -6,6 +6,12 @@ import (
 	"github.com/charmbracelet/bubbles/key"
 )
 
+type Config struct {
+	Profile 	Profile
+	Keybinds 	Keybinds
+	Warnings	[]string
+}
+
 type CliConfig struct {
 	ProfileOverride 	Profile
 	ConfigPath 			opt.Opt[string]

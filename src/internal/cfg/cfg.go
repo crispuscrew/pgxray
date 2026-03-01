@@ -11,7 +11,7 @@ import (
 )
 
 var ErrFileNotFound = errors.New("File not found")
-func BuildConfig(cliOverride CliConfig) (Profile, Keybinds, []string) {
+func BuildConfig(cliOverride CliConfig) Config {
 	profile := defaultProfile
 	keybinds := defaultKeybinds
 	var warnings []string
@@ -50,7 +50,11 @@ func BuildConfig(cliOverride CliConfig) (Profile, Keybinds, []string) {
 		keybinds = merge(keybinds, kbFromFile)
 	}
 
-	return profile, keybinds, warnings
+	return Config{
+		Profile:  profile,
+		Keybinds: keybinds,
+		Warnings: warnings,
+	}
 }
 
 func profileFromFile(path, profileName string) (Profile, error) {
