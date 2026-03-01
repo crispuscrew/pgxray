@@ -7,6 +7,7 @@ import (
 	"github.com/crispuscrew/pgxray/src/internal/ui/colors"
 	"github.com/crispuscrew/pgxray/src/internal/ui/common"
 
+	"github.com/crispuscrew/pgxray/src/internal/ui/loader"
 	"github.com/crispuscrew/pgxray/src/internal/ui/toast"
 
 	tea "charm.land/bubbletea/v2"
@@ -15,12 +16,14 @@ import (
 
 func RunUI(config cfg.Config) {
 	model := Model{
-		initParams: fromConfig(config),
-		theme: colors.Default(),
+		loading		: true,
+		initParams	: fromConfig(config),
+		theme		: colors.Default(),
 	}
 	
 	model.components = map[common.ComponentID]common.Component {
-		common.ToastID: toast.Model{},
+		common.ToastID	: toast.Model{},
+		common.LoaderID	: loader.Model{},
 	}
 	var update common.Component; var cmds []tea.Cmd
 	for id, component := range model.components {

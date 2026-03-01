@@ -1,7 +1,6 @@
 package common
 
 import (
-	"github.com/crispuscrew/pgxray/src/internal/cfg"
 	"github.com/crispuscrew/pgxray/src/internal/ui/colors"
 
 	"time"
@@ -18,13 +17,8 @@ type Component interface {
 type ComponentID int
 const (
 	ToastID ComponentID = iota
+	LoaderID
 )
-
-type InitParams struct {
-	Profile 	cfg.Profile
-	Keybinds 	cfg.Keybinds
-	Warnings	[]string
-}
 
 func After(timeout time.Duration, msg tea.Msg) tea.Cmd {
 	// tea running gorutine by itself

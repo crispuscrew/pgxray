@@ -31,6 +31,10 @@ type Palette struct {
 	String  		color.Color
 	Boolean 		color.Color
 	Date    		color.Color
+
+	// Color for other purposes
+	Accent 			color.Color
+	Garmonic		color.Color
 }
 
 // Creates a palette adapted to the terminal's light/dark background.
@@ -57,5 +61,8 @@ func Default() Palette {
 		String:  		ld(lipgloss.Color("#006600"), lipgloss.Color("#f1fa8c")),
 		Boolean: 		ld(lipgloss.Color("#cc00cc"), lipgloss.Color("#ff79c6")),
 		Date:    		ld(lipgloss.Color("#cc6600"), lipgloss.Color("#ffb86c")),
+
+		Accent: 		ld(lipgloss.Color("#00FFA3"), lipgloss.Color("#B14FFF")),
+		Garmonic:		ld(lipgloss.Color("#B14FFF"), lipgloss.Color("#00FFA3")),
 	}
 }

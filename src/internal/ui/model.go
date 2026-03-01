@@ -9,6 +9,9 @@ import (
 )
 
 type Model struct {
+	//conn 		*db.Conn
+	loading 	bool
+
 	initParams 	common.InitParams
 	initCmds	[]tea.Cmd
 	theme		colors.Palette
@@ -41,6 +44,8 @@ func (model Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "q", "ctrl+c":
 			return model, tea.Quit
 		}
+	case common.CompleteLoadingMsg:
+		model.loading = false
     }
 
 	var cmds []tea.Cmd; var cmd tea.Cmd
