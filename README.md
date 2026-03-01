@@ -1,5 +1,7 @@
 # pgxray
 
+> **Work in progress.** pgxray is under active development and does not yet provide its full intended functionality. Not recommended for production use.
+
 A fast, keyboard-driven TUI for exploring PostgreSQL databases - designed to run **on the server**, accessed over SSH. No local client setup, no port forwarding, no data leaving the host.
 
 ```

@@ -1,5 +1,5 @@
 package loader
 
 func (model Model) View() string {
-	return "Connecting...\n\n" + model.bar.ViewAs(model.percent)
+	return "Connecting...\t" + model.bar.View()
 }

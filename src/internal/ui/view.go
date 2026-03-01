@@ -8,8 +8,17 @@ import (
 )
 
 func (model Model) View() tea.View {
-	if model.loading {
-		return tea.NewView(model.components[common.LoaderID].View())
+	var view tea.View
+	if model.critical {
+		view = tea.NewView(model.components[common.ToastID].View())
+	} else if model.loading {
+		view = tea.NewView(
+			model.components[common.ToastID].View() +
+			model.components[common.LoaderID].View(),
+		)
+	} else {
+		view = tea.NewView(model.components[common.ToastID].View())
 	}
-	return tea.NewView(model.components[common.ToastID].View())
+	view.AltScreen = true
+	return view
 }

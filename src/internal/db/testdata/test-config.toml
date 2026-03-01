@@ -1,0 +1,6 @@
+[connections.default]
+host     = "pgxray-test-pg"
+port     = 5432
+user     = "postgres"
+database = "testdb"
+sslmode  = "disable"

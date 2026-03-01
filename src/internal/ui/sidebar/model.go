@@ -2,18 +2,21 @@ package sidebar
 
 import (
 	"github.com/crispuscrew/pgxray/src/internal/ui/common"
+	"github.com/crispuscrew/pgxray/src/internal/ui/colors"
 	"github.com/crispuscrew/pgxray/src/internal/opt"
+
+	tea "charm.land/bubbletea/v2"
 )
 
 type Model struct {
-	ViewNodes 	[]ViewNode
-	TabSize 	int
+	DisplayNodes	[]DisplayNode
+	TabSize 		int
 
-	CursorPos 	int
-	SelectedID 	opt.Option[int]
+	CursorPos 		int
+	SelectedID 		opt.Opt[int]
 }
 
-func (model Model) Init(initParams common.InitParams, theme colors.Palette) (common.Component, []tea.Cmd) {
+func (model Model) Init(initParams common.InitParams, theme colors.Palette) (common.Component, tea.Cmd) {
 	return model, nil
 }
 
@@ -21,7 +24,7 @@ func (model Model) Update(msg tea.Msg) (common.Component, tea.Cmd) {
 	return model, nil
 }
 
-type ViewNode struct {
+type DisplayNode struct {
 	ID			int
 	Name 		string		// For Node grouping
 	DataNodes 	[]DataNode

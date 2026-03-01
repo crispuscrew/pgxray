@@ -9,7 +9,7 @@ import (
 )
 
 type Component interface {
-	Init(initParams InitParams, theme colors.Palette) (Component, []tea.Cmd)
+	Init(initParams InitParams, theme colors.Palette) (Component, tea.Cmd)
 	Update(msg tea.Msg) (Component, tea.Cmd)
 	View() string
 }
@@ -18,6 +18,7 @@ type ComponentID int
 const (
 	ToastID ComponentID = iota
 	LoaderID
+	DBID
 )
 
 func After(timeout time.Duration, msg tea.Msg) tea.Cmd {

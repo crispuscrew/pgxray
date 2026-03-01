@@ -2,18 +2,22 @@ package ui
 
 import (
 	"github.com/crispuscrew/pgxray/src/internal/cfg"
+	"github.com/crispuscrew/pgxray/src/internal/opt"
 	"github.com/crispuscrew/pgxray/src/internal/ui/colors"
 	"github.com/crispuscrew/pgxray/src/internal/ui/common"
+
+	"fmt"
+	"time"
 
 	tea "charm.land/bubbletea/v2"
 )
 
 type Model struct {
-	//conn 		*db.Conn
 	loading 	bool
+	critical 	bool
 
 	initParams 	common.InitParams
-	initCmds	[]tea.Cmd
+	initCmd		tea.Cmd
 	theme		colors.Palette
 
 	components 	map[common.ComponentID]common.Component
@@ -32,11 +36,21 @@ func fromConfig(config cfg.Config) common.InitParams {
 }
 
 func (model Model) Init() tea.Cmd {
-	return tea.Batch(model.initCmds...)
+	return model.initCmd
 }
 
 func (model Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	var cmd, updateCmd tea.Cmd
     switch msg := msg.(type) {
+	case common.AddCriticalToast:
+		model.critical = true
+		updateCmd = func() tea.Msg {
+			return common.AddInfoToast{
+				Item: fmt.Sprintf("Critical failure, press %s to exit", 
+					model.initParams.Keybinds.Quit.Get()[0].Help().Key),
+				Timeout: opt.Set(time.Duration(0)),
+			}
+		}
 	case tea.WindowSizeMsg:
 		model.width, model.height = msg.Width, msg.Height
     case tea.KeyPressMsg:
@@ -48,14 +62,13 @@ func (model Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		model.loading = false
     }
 
-	var cmds []tea.Cmd; var cmd tea.Cmd
 	var updated common.Component
 	for id, component := range model.components {
 		updated, cmd = component.Update(msg);
 		model.components[id] = updated
 		if cmd != nil {
-			cmds = append(cmds, cmd)
+			updateCmd = tea.Batch(updateCmd, cmd)
 		}
 	}
-    return model, tea.Batch(cmds...)
+    return model, updateCmd
 }
