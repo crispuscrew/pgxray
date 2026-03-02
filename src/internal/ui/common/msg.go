@@ -1,7 +1,7 @@
 package common
 
 import (
-	"github.com/crispuscrew/pgxray/src/internal/opt"
+	"github.com/crispuscrew/pgxray/internal/opt"
 
 	"time"
 )

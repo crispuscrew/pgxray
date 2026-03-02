@@ -1,7 +1,7 @@
 package common
 
 import (
-	"github.com/crispuscrew/pgxray/src/internal/ui/colors"
+	"github.com/crispuscrew/pgxray/internal/ui/colors"
 
 	"time"
 
@@ -22,7 +22,7 @@ const (
 )
 
 func After(timeout time.Duration, msg tea.Msg) tea.Cmd {
-	// tea running gorutine by itself
+	// tea running goroutine by itself
 	return func() tea.Msg {
 		time.Sleep(timeout)
 		return msg

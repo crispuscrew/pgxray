@@ -35,7 +35,7 @@ ssh user@myserver pgxray
 
 ```bash
 # On the server
-go install github.com/crispuscrew/pgxray/cmd/pgxray@latest
+go install github.com/crispuscrew/pgxray/src/cmd/pgxray@latest
 ```
 
 Or download a prebuilt binary from [Releases](https://github.com/crispuscrew/pgxray/releases) and place it somewhere in `$PATH` on the server.
@@ -49,7 +49,7 @@ pgxray reads `~/.config/pgxray/config.toml` by default. Use `--config` to specif
 Config file locations (checked in order):
 
 1. `--config /path/to/config.toml`
-2. `$PGXRAY_CONFIG`
+2. `$PGXRAY_CONFIG_PATH`
 3. `~/.config/pgxray/config.toml`
 
 ### Profiles
@@ -147,6 +147,6 @@ Write statements (`INSERT`, `UPDATE`, `DELETE`, `DROP`, ...) will be rejected be
 
 ## Requirements
 
-- Go 1.22+ (to build from source)
+- Go 1.24+ (to build from source)
 - PostgreSQL 12+
 - A terminal with 256-color support (most modern terminals qualify)

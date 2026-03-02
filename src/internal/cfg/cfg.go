@@ -10,7 +10,7 @@ import (
 	toml "github.com/pelletier/go-toml/v2"
 )
 
-var ErrFileNotFound = errors.New("File not found")
+var ErrFileNotFound = errors.New("file not found")
 func BuildConfig(cliOverride CliConfig) Config {
 	profile := defaultProfile
 	keybinds := defaultKeybinds

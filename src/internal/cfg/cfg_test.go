@@ -1,7 +1,7 @@
 package cfg
 
 import (
-	"github.com/crispuscrew/pgxray/src/internal/opt"
+	"github.com/crispuscrew/pgxray/internal/opt"
 
 	"os"
 	"testing"
@@ -21,10 +21,14 @@ func TestBuildConfig_Defaults(t *testing.T) {
 func TestBuildConfig_FileOverridesDefaults(t *testing.T) {
 	dir := t.TempDir()
 	path := filepath.Join(dir, "config.toml")
-	os.WriteFile(path, []byte(`
-	[connections.default]
-	host = "myserver"
-	`), 0644)
+	
+	testConfig := []byte(`
+		[connections.default]
+		host = "myserver"
+		`)
+	if err :=os.WriteFile(path, testConfig, 0644); err != nil {
+		t.Fatalf("could not write config file: %v", err)
+	}
 
 	config := BuildConfig(CliConfig{
 		ConfigPath: opt.Set(path),

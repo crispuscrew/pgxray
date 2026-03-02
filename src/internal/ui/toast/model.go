@@ -1,10 +1,10 @@
 package toast
 
 import (
-	"github.com/crispuscrew/pgxray/src/internal/opt"
+	"github.com/crispuscrew/pgxray/internal/opt"
 
-	"github.com/crispuscrew/pgxray/src/internal/ui/common"
-	"github.com/crispuscrew/pgxray/src/internal/ui/colors"
+	"github.com/crispuscrew/pgxray/internal/ui/common"
+	"github.com/crispuscrew/pgxray/internal/ui/colors"
 
 	"time"
 
@@ -66,7 +66,7 @@ type Info    struct{ Text string }
 func (model Model) Add(item toast, timeout opt.Opt[time.Duration]) (Model, tea.Cmd) {
 	entry := entry{ID: new(struct{}), Text: item}
 	model.items = append(model.items, entry)
-	duration := defaultConnectionTimeout
+	duration := defaultToastTimeout
 	if timeout.IsSet() {
 		duration = timeout.Get()
 		if duration == 0 {

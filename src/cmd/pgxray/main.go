@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/crispuscrew/pgxray/src/internal/ui"
-	"github.com/crispuscrew/pgxray/src/internal/cli"
-	"github.com/crispuscrew/pgxray/src/internal/cfg"
+	"github.com/crispuscrew/pgxray/internal/ui"
+	"github.com/crispuscrew/pgxray/internal/cli"
+	"github.com/crispuscrew/pgxray/internal/cfg"
 )
 
 func main() {

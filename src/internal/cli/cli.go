@@ -5,8 +5,8 @@
 package cli
 
 import (
-	"github.com/crispuscrew/pgxray/src/internal/cfg"
-	"github.com/crispuscrew/pgxray/src/internal/opt"
+	"github.com/crispuscrew/pgxray/internal/cfg"
+	"github.com/crispuscrew/pgxray/internal/opt"
 
 	"log"
 	"reflect"

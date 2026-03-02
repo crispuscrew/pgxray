@@ -1,8 +1,8 @@
 package loader
 
 import (
-	"github.com/crispuscrew/pgxray/src/internal/ui/colors"
-	"github.com/crispuscrew/pgxray/src/internal/ui/common"
+	"github.com/crispuscrew/pgxray/internal/ui/colors"
+	"github.com/crispuscrew/pgxray/internal/ui/common"
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/bubbles/v2/progress"

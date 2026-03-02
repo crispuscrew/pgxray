@@ -1,9 +1,9 @@
 package sidebar
 
 import (
-	"github.com/crispuscrew/pgxray/src/internal/ui/common"
-	"github.com/crispuscrew/pgxray/src/internal/ui/colors"
-	"github.com/crispuscrew/pgxray/src/internal/opt"
+	"github.com/crispuscrew/pgxray/internal/ui/common"
+	"github.com/crispuscrew/pgxray/internal/ui/colors"
+	"github.com/crispuscrew/pgxray/internal/opt"
 
 	tea "charm.land/bubbletea/v2"
 )

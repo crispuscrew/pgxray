@@ -1,7 +1,7 @@
 package common
 
 import (
-	"github.com/crispuscrew/pgxray/src/internal/cfg"
+	"github.com/crispuscrew/pgxray/internal/cfg"
 )
 
 type InitParams struct {

@@ -1,12 +1,12 @@
 package db
 
 import (
-	"github.com/crispuscrew/pgxray/src/internal/cfg"
-	"github.com/crispuscrew/pgxray/src/internal/db"
+	"github.com/crispuscrew/pgxray/internal/cfg"
+	"github.com/crispuscrew/pgxray/internal/db"
 
-	"github.com/crispuscrew/pgxray/src/internal/ui/colors"
-	"github.com/crispuscrew/pgxray/src/internal/ui/common"
-	"github.com/crispuscrew/pgxray/src/internal/ui/loader"
+	"github.com/crispuscrew/pgxray/internal/ui/colors"
+	"github.com/crispuscrew/pgxray/internal/ui/common"
+	"github.com/crispuscrew/pgxray/internal/ui/loader"
 
 	"time"
 

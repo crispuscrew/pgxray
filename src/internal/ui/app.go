@@ -2,14 +2,14 @@
 package ui
 
 import (
-	"github.com/crispuscrew/pgxray/src/internal/cfg"
+	"github.com/crispuscrew/pgxray/internal/cfg"
 
-	"github.com/crispuscrew/pgxray/src/internal/ui/colors"
-	"github.com/crispuscrew/pgxray/src/internal/ui/common"
+	"github.com/crispuscrew/pgxray/internal/ui/colors"
+	"github.com/crispuscrew/pgxray/internal/ui/common"
 
-	"github.com/crispuscrew/pgxray/src/internal/ui/loader"
-	"github.com/crispuscrew/pgxray/src/internal/ui/toast"
-	"github.com/crispuscrew/pgxray/src/internal/ui/db"
+	"github.com/crispuscrew/pgxray/internal/ui/loader"
+	"github.com/crispuscrew/pgxray/internal/ui/toast"
+	"github.com/crispuscrew/pgxray/internal/ui/db"
 
 	tea "charm.land/bubbletea/v2"
 	"log"

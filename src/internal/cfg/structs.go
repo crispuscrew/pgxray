@@ -1,7 +1,7 @@
 package cfg
 
 import (
-	"github.com/crispuscrew/pgxray/src/internal/opt"
+	"github.com/crispuscrew/pgxray/internal/opt"
 
 	"github.com/charmbracelet/bubbles/key"
 )

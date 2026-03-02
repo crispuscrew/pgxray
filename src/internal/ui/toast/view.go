@@ -1,7 +1,7 @@
 package toast
 
 import (
-	"github.com/crispuscrew/pgxray/src/internal/ui/colors"
+	"github.com/crispuscrew/pgxray/internal/ui/colors"
 
 	"strings"
 

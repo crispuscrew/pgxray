@@ -1,9 +1,9 @@
 package ui
 
 import (
-	"github.com/crispuscrew/pgxray/src/internal/ui/common"
+	"github.com/crispuscrew/pgxray/internal/ui/common"
 
-	//"charm.land/lipgloss/v2"
+	//"charm.land/lipgloss/v2" // for future styling
 	tea "charm.land/bubbletea/v2"
 )
 

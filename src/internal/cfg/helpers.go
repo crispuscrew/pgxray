@@ -1,7 +1,7 @@
 package cfg
 
 import (
-	"github.com/crispuscrew/pgxray/src/internal/opt"
+	"github.com/crispuscrew/pgxray/internal/opt"
 
 	"reflect"
 	"os"
@@ -18,9 +18,10 @@ type Field struct {
 }
 
 func ForEachField[T any](val *T, fn func(field Field)) {
-	v := reflect.ValueOf(val).Elem()
-	for i := 0; i < v.NumField(); i++ {
-		fn(Field{Value: v.Field(i), Meta: v.Type().Field(i)})
+	value := reflect.ValueOf(val).Elem()
+	valType := reflect.TypeOf(*val)
+	for i := range value.NumField() {
+		fn(Field{Value: value.Field(i), Meta: valType.Field(i)})
 	}
 }
 
