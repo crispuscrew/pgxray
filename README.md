@@ -31,17 +31,6 @@ ssh user@myserver pgxray
 
 ---
 
-## Installation
-
-```bash
-# On the server
-go install github.com/crispuscrew/pgxray/src/cmd/pgxray@latest
-```
-
-Or download a prebuilt binary from [Releases](https://github.com/crispuscrew/pgxray/releases) and place it somewhere in `$PATH` on the server.
-
----
-
 ## Configuration
 
 pgxray reads `~/.config/pgxray/config.toml` by default. Use `--config` to specify a different path.
