@@ -10,11 +10,11 @@ import (
 
 type Model struct {
 	bar     	progress.Model
-	RealPct  	float64
+	realPct  	float64
 }
 
 func (model Model) Init(initParams common.InitParams, theme colors.Palette) (common.Component, tea.Cmd) {
-	model.bar = progress.New(progress.WithColors(theme.Accent, theme.Garmonic))
+	model.bar = progress.New(progress.WithColors(theme.Accent, theme.Harmonic))
 	return model, nil
 }
 
@@ -23,12 +23,12 @@ func (model Model) Update(msg tea.Msg) (common.Component, tea.Cmd) {
 	case progress.FrameMsg:
 		updated, cmd := model.bar.Update(msg)
 		model.bar = updated
-		if cmd == nil && model.RealPct >= 1.0 {
+		if cmd == nil && model.realPct >= 1.0 {
 			return model, func() tea.Msg { return common.CompleteLoadingMsg{} }
 		}
 		return model, cmd
 	case ProgressMsg:
-		model.RealPct = msg.Percent
+		model.realPct = msg.Percent
 		return model, model.bar.SetPercent(msg.Percent)
 	default:
 		return model, nil

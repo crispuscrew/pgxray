@@ -34,7 +34,7 @@ type Palette struct {
 
 	// Color for other purposes
 	Accent 			color.Color
-	Garmonic		color.Color
+	Harmonic		color.Color
 }
 
 // Creates a palette adapted to the terminal's light/dark background.
@@ -63,6 +63,6 @@ func Default() Palette {
 		Date:    		ld(lipgloss.Color("#cc6600"), lipgloss.Color("#ffb86c")),
 
 		Accent: 		ld(lipgloss.Color("#00FFA3"), lipgloss.Color("#B14FFF")),
-		Garmonic:		ld(lipgloss.Color("#B14FFF"), lipgloss.Color("#00FFA3")),
+		Harmonic:		ld(lipgloss.Color("#B14FFF"), lipgloss.Color("#00FFA3")),
 	}
 }
