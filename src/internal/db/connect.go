@@ -9,7 +9,8 @@ import (
 )
 
 type Conn struct {
-	conn *pgx.Conn 
+	conn 	*pgx.Conn
+	db 		Database
 }
 
 func Connect(profile cfg.Profile) (*Conn, error) {
@@ -21,5 +22,5 @@ func Connect(profile cfg.Profile) (*Conn, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Conn{conn: conn}, nil
+	return &Conn{conn: conn, db: Database{DBInstance: DBInstance{Name: profile.Database.Get()}}}, nil
 }

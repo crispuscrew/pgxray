@@ -1,26 +1,31 @@
 package db
 
-type Database struct {
+type DBInstance struct {
 	Name 				string
+	ChildrenLoaded		bool
+}
+
+type Database struct {
+	DBInstance
 	Schemas 			[]Schema
 }
 
 type Schema struct {
-	Name 				string
+	DBInstance
 	Tables 				[]Table
 	Views 				[]View
 	Sequences 			[]Sequence
 }
 
 type Table struct {
-	Name 				string
+	DBInstance
 	Columns 			[]Column
 	Indexes 			[]Index
 	Constraints 		[]Constraint
 }
 
 type Column struct {
-	Name 				string
+	DBInstance
 	DataType 			string
 	IsNullable 			bool
 	Default      		string
@@ -28,7 +33,7 @@ type Column struct {
 }
 
 type Index struct {
-	Name      			string
+	DBInstance
 	Columns   			[]string
 	Kind      			string  // btree, hash, gin...
 	IsUnique  			bool
@@ -36,7 +41,7 @@ type Index struct {
 }
 
 type Constraint struct {
-	Name       			string
+	DBInstance
 	Kind       			string  // PRIMARY KEY, FOREIGN KEY, CHECK, UNIQUE
 	Columns    			[]string
 	References 			string  // for FK: "table(column)"
@@ -44,12 +49,12 @@ type Constraint struct {
 }
 
 type View struct {
-	Name       			string
+	DBInstance
 	Definition 			string
 }
 
 type Sequence struct {
-	Name         		string
+	DBInstance
 	CurrentValue 		int64
 	MinValue     		int64
 	MaxValue     		int64
