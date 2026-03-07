@@ -13,7 +13,7 @@ func withTx[T any](ctx context.Context, conn *Conn, fn func(pgx.Tx) (T, error)) 
 	})
 
 	if err != nil { var zero T; return zero, err }
-	defer tx.Rollback(ctx)
+	defer func() { _ = tx.Rollback(ctx) }()
 
 	return fn(tx)
 }
