@@ -9,6 +9,11 @@ RUN_DEV    := $(RUNTIME) run --rm
 TEST_NET   := pgxray-test-net
 TEST_PG    := pgxray-test-pg
 TEST_PKG   ?= ./...
+TEST_PG_ARGS := \
+	-e POSTGRES_PASSWORD=test \
+	-e POSTGRES_DB=testdb \
+	-v $(PWD)/src/internal/db/testdata/seed.sql:/docker-entrypoint-initdb.d/seed.sql:ro,z \
+	docker.io/library/postgres:16-alpine
 
 .PHONY: build run lint tidy clean image-dev image-lint test db help rebuild
 
@@ -41,10 +46,7 @@ build: _image-dev
 
 test: _image-test
 	$(RUNTIME) network create $(TEST_NET) 2>/dev/null ; \
-	$(RUNTIME) run -d --name $(TEST_PG) --network $(TEST_NET) \
-		-e POSTGRES_PASSWORD=test \
-		-e POSTGRES_DB=testdb \
-		docker.io/library/postgres:16-alpine ; \
+	$(RUNTIME) run -d --name $(TEST_PG) --network $(TEST_NET) $(TEST_PG_ARGS) ; \
 	until $(RUNTIME) exec $(TEST_PG) pg_isready -U postgres; do sleep 1; done ; \
 	$(RUNTIME) run --rm --network $(TEST_NET) \
 		-v $(PWD)/src:/app \
@@ -54,11 +56,7 @@ test: _image-test
 	$(RUNTIME) network rm $(TEST_NET) 2>/dev/null
 
 db:
-	$(RUNTIME) run --rm --name $(TEST_PG) \
-		-e POSTGRES_PASSWORD=test \
-		-e POSTGRES_DB=testdb \
-		-p 5432:5432 \
-		docker.io/library/postgres:16-alpine
+	$(RUNTIME) run --rm --name $(TEST_PG) -p 5432:5432 $(TEST_PG_ARGS)
 
 lint: _image-lint
 	$(RUN_DEV) -v $(PWD)/src:/app $(IMAGE_LINT) golangci-lint run ./...

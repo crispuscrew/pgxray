@@ -9,16 +9,19 @@ import (
 	"fmt"
 )
 
+var testConn *Conn
+
 func TestMain(m *testing.M) {
 	config := cfg.BuildConfig(cfg.CliConfig{                      
 		ConfigPath: opt.Set("testdata/test-config.toml"),         
 	})
 
-	_, err := Connect(config.Profile)
+	conn, err := Connect(config.Profile)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "connect failed: %v\n", err)
 		os.Exit(1)
 	}
 
+	testConn = conn
 	os.Exit(m.Run())
 }
