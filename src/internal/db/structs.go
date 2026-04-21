@@ -2,7 +2,7 @@ package db
 
 type DBInstance struct {
 	Name 				string
-	ChildrenLoaded		bool
+	IsLoaded		bool
 }
 
 type Database struct {
@@ -27,7 +27,7 @@ type Table struct {
 type Column struct {
 	DBInstance
 	DataType 			string
-	IsNullable 			bool
+	notNullable			bool
 	Default      		string
 	Comment      		string
 }
@@ -43,9 +43,7 @@ type Index struct {
 type Constraint struct {
 	DBInstance
 	Kind       			string  // PRIMARY KEY, FOREIGN KEY, CHECK, UNIQUE
-	Columns    			[]string
-	References 			string  // for FK: "table(column)"
-	Check      			string  // for CHECK: condition
+	Definition			string
 }
 
 type View struct {
@@ -55,7 +53,7 @@ type View struct {
 
 type Sequence struct {
 	DBInstance
-	CurrentValue 		int64
+	CurrentValue 		*int64
 	MinValue     		int64
 	MaxValue     		int64
 	Increment    		int64
