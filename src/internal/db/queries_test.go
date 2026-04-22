@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"testing"
 )
@@ -119,4 +120,46 @@ func TestLoadTableInfo_ForeignKey(t *testing.T) {
 
 	if _, ok := conByName["orders_user_id_fkey"]; !ok { t.Fatalf("Expected constraint 'orders_user_id_fkey'") }
 	if conByName["orders_user_id_fkey"].Kind != "FOREIGN KEY" { t.Errorf("Expected orders_user_id_fkey to be FOREIGN KEY") }
+}
+
+func TestLoadQuery(t *testing.T) {
+	result, err := testConn.LoadQuery(context.Background(), "SELECT id, name FROM users ORDER BY id")
+	if err != nil { t.Fatalf("LoadQuery failed: %v", err) }
+
+	if len(result.ColumnName) != 2 { t.Errorf("Expected 2 columns, got %d", len(result.ColumnName)) }
+	if result.ColumnName[0] != "id"   { t.Errorf("Expected column 0 to be 'id', got %q", result.ColumnName[0]) }
+	if result.ColumnName[1] != "name" { t.Errorf("Expected column 1 to be 'name', got %q", result.ColumnName[1]) }
+
+	if result.ColumnType[0] != "int4" { t.Errorf("Expected id type 'int4', got %q", result.ColumnType[0]) }
+	if result.ColumnType[1] != "text" { t.Errorf("Expected name type 'text', got %q", result.ColumnType[1]) }
+
+	if len(result.Rows) != 2 { t.Errorf("Expected 2 rows (Alice, Bob), got %d", len(result.Rows)) }
+}
+
+func TestLoadQuery_RejectsWrite(t *testing.T) {
+	_, err := testConn.LoadQuery(context.Background(), "INSERT INTO users (name) VALUES ('hacker')")
+	if err == nil { t.Errorf("Expected error for write query in read-only transaction, got nil") }
+}
+
+func TestLoadTableRows(t *testing.T) {
+	result, err := testConn.LoadTableRows(context.Background(), "public", "users", 1, 10, 0)
+	if err != nil { t.Fatalf("LoadTableRows failed: %v", err) }
+
+	if len(result.ColumnName) == 0 { t.Errorf("Expected columns, got 0") }
+	if len(result.Rows) != 2 { t.Errorf("Expected 2 rows, got %d", len(result.Rows)) }
+}
+
+func TestLoadTableRows_Pagination(t *testing.T) {
+	page1, err := testConn.LoadTableRows(context.Background(), "public", "users", 1, 1, 0)
+	if err != nil { t.Fatalf("LoadTableRows page1 failed: %v", err) }
+
+	page2, err := testConn.LoadTableRows(context.Background(), "public", "users", 1, 1, 1)
+	if err != nil { t.Fatalf("LoadTableRows page2 failed: %v", err) }
+
+	if len(page1.Rows) != 1 { t.Errorf("Expected 1 row on page1, got %d", len(page1.Rows)) }
+	if len(page2.Rows) != 1 { t.Errorf("Expected 1 row on page2, got %d", len(page2.Rows)) }
+
+	if fmt.Sprintf("%v", page1.Rows[0]) == fmt.Sprintf("%v", page2.Rows[0]) {
+		t.Errorf("Expected page1 and page2 to return different rows")
+	}
 }

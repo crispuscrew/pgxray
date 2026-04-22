@@ -2,21 +2,10 @@ package db
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/jackc/pgx/v5"
 )
-
-func withTx[T any](ctx context.Context, conn *Conn, fn func(pgx.Tx) (T, error)) (T, error) {
-	tx, err := conn.conn.BeginTx(ctx, pgx.TxOptions{
-		AccessMode	: pgx.ReadOnly,
-		IsoLevel	: pgx.RepeatableRead,
-	})
-
-	if err != nil { var zero T; return zero, err }
-	defer func() { _ = tx.Rollback(ctx) }()
-
-	return fn(tx)
-}
 
 func (conn *Conn) LoadDatabaseInfo(ctx context.Context) (Database, error) {
 	return withTx(ctx, conn, func(tx pgx.Tx) (Database, error) {
@@ -208,5 +197,43 @@ func (conn *Conn) LoadTableInfo(ctx context.Context, schemaName, tableName strin
 			Indexes: indexes,
 			Constraints: constraints,
 			}, nil
+	})
+}
+
+func (conn *Conn) LoadTableRows(ctx context.Context, schemaName, tableName string, orderByCol, limit, offset uint) (Response, error) {
+	table 	:= pgx.Identifier{schemaName, tableName}.Sanitize()
+	query := fmt.Sprintf(`
+			SELECT *
+			FROM %s
+			ORDER BY %d
+			LIMIT %d
+			OFFSET %d
+		`, table, orderByCol, limit, offset)
+	return conn.LoadQuery(ctx, query)
+}
+
+func (conn *Conn) LoadQuery(ctx context.Context, query string) (Response, error) {
+	return withTx(ctx, conn, func(tx pgx.Tx) (Response, error) {
+		rows, err := tx.Query(ctx, query)
+		if err != nil { return Response{}, err }
+
+		fields := rows.FieldDescriptions()
+
+		var response Response
+		response.ColumnName = make([]string, 0, len(fields))
+		response.ColumnType = make([]string, 0, len(fields))
+		response.Rows = make([][]any, 0)
+
+		for _, field := range fields {
+			response.ColumnName = append(response.ColumnName, field.Name)
+			response.ColumnType = append(response.ColumnType, oidToName(field.DataTypeOID))
+		}
+
+		for rows.Next() {
+			values, err := rows.Values()
+			if err != nil { return Response{}, err}
+			response.Rows = append(response.Rows, values)
+		}
+		return response, rows.Err()
 	})
 }

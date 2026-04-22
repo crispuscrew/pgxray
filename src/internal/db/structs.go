@@ -58,3 +58,9 @@ type Sequence struct {
 	MaxValue     		int64
 	Increment    		int64
 }
+
+type Response struct {
+	ColumnName			[]string
+	ColumnType 			[]string
+	Rows				[][]any
+}
