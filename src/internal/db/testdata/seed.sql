@@ -17,3 +17,8 @@ INSERT INTO users (name, email) VALUES
 
 CREATE INDEX idx_users_email ON users(email);
 CREATE INDEX idx_orders_pending ON orders(status) WHERE status = 'pending';
+
+CREATE USER pwuser WITH PASSWORD 'secret' LOGIN;
+GRANT CONNECT ON DATABASE testdb TO pwuser;
+GRANT USAGE ON SCHEMA public TO pwuser;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO pwuser;

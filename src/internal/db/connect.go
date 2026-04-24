@@ -21,9 +21,7 @@ func Connect(profile cfg.Profile) (*Conn, error) {
 	defer cancel()
 
 	conn, err := pgx.Connect(ctx, profileConnString(profile))
-	
-	if err != nil {
-		return nil, err
-	}
+	if err != nil { return nil, err }
+
 	return &Conn{conn: conn, dbName: profile.Database.Get()}, nil
 }
