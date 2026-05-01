@@ -7,16 +7,23 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
+/*
+Mode	|  	Toasts
+-------------------
+Tree 	| 	Data
+		|  	Prompt (opt)
+*/
 func (model Model) View() tea.View {
 	var view tea.View
-	if model.critical {
-		view = tea.NewView(model.components[common.ToastID].View())
-	} else if model.loading {
+	switch model.activeMode {
+	case common.Init:
 		view = tea.NewView(
-			model.components[common.ToastID].View() +
-			model.components[common.LoaderID].View(),
+			model.components[common.ToastID].View(),
+			//model.components[common.LoaderID].View(),
 		)
-	} else {
+	case common.Critical:
+		view = tea.NewView(model.components[common.ToastID].View())
+	default:
 		view = tea.NewView(model.components[common.ToastID].View())
 	}
 	view.AltScreen = true

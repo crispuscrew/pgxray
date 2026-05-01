@@ -4,7 +4,6 @@ import (
 	"github.com/crispuscrew/pgxray/internal/cfg"
 	"github.com/crispuscrew/pgxray/internal/db"
 
-	"github.com/crispuscrew/pgxray/internal/ui/colors"
 	"github.com/crispuscrew/pgxray/internal/ui/common"
 	"github.com/crispuscrew/pgxray/internal/ui/loader"
 
@@ -13,31 +12,28 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
+var _ common.Component = &Model{}
 type Model struct {
 	conn *db.Conn
 }
 
-func (model Model) Init(initParams common.InitParams, theme colors.Palette) (common.Component, tea.Cmd) {
-	return model, connectCmd(initParams.Profile)
-}
-
-func (model Model) Update(msg tea.Msg) (common.Component, tea.Cmd) {
+func (model Model) Update(msg tea.Msg) tea.Cmd {
 	switch msg := msg.(type) {
 	case ConnectedMsg:
 		model.conn = msg.Conn
-		return model, tea.Batch(
+		return tea.Batch(
 			func() tea.Msg { return loader.ProgressMsg{Percent: 0.35} },
 			common.After(3 * time.Second, SchemasMsg{}),
 		)
 	case SchemasMsg:
-		return model, tea.Batch(
+		return tea.Batch(
 			func() tea.Msg { return loader.ProgressMsg{Percent: 0.7} },
 			common.After(3 * time.Second, DatabaseReadyMsg{}),
 		)
 	case DatabaseReadyMsg:
-		return model, func() tea.Msg { return loader.ProgressMsg{Percent: 1.0} }
+		return func() tea.Msg { return loader.ProgressMsg{Percent: 1.0} }
 	}
-	return model, nil
+	return nil
 }
 
 type ConnectedMsg 		struct { Conn *db.Conn }

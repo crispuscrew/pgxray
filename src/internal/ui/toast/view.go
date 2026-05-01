@@ -19,7 +19,7 @@ func (model Model) View() string {
 		if _, ok := entry.Text.(Info); ok && model.silentMode {
 			continue
 		}
-		sb.WriteString(entry.Text.render(model.theme))
+		sb.WriteString(entry.Text.render(*model.Theme))
 		sb.WriteRune('\n')
 	}
 	return sb.String()

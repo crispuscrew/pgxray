@@ -6,12 +6,12 @@ import (
 	"time"
 )
 
-type CompleteLoadingMsg struct{}
+type CompleteLoading	struct {}
 
 // Toast messages
 // Zero timeout means never expire
 // Not set timeout means use default timeout
-type AddCriticalToast 	struct { Item string; Timeout opt.Opt[time.Duration] }
-type AddErrorToast 		struct { Item string; Timeout opt.Opt[time.Duration] }
-type AddWarningToast 	struct { Item string; Timeout opt.Opt[time.Duration] }
-type AddInfoToast 		struct { Item string; Timeout opt.Opt[time.Duration] }
+type AddCriticalToast  	struct { Item string; Timeout opt.Opt[time.Duration] }
+type AddErrorToast		struct { Item string; Timeout opt.Opt[time.Duration] }
+type AddWarningToast	struct { Item string; Timeout opt.Opt[time.Duration] }
+type AddInfoToast		struct { Item string; Timeout opt.Opt[time.Duration] }

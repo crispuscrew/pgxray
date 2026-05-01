@@ -1,13 +1,16 @@
 package common
 
 import (
+	"github.com/crispuscrew/pgxray/internal/ui/colors"
+
 	"time"
 
 	tea "charm.land/bubbletea/v2"
 )
 
 type Component interface {
-	Update(msg tea.Msg) tea.Cmd
+	Init(initParams InitParams, theme colors.Palette) (Component, tea.Cmd)
+	Update(msg tea.Msg) (Component, tea.Cmd)
 	View() string
 }
 

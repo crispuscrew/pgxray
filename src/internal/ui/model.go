@@ -7,69 +7,56 @@ import (
 	"github.com/crispuscrew/pgxray/internal/ui/colors"
 	"github.com/crispuscrew/pgxray/internal/ui/common"
 
-	"fmt"
+	//"fmt"
 	"time"
 
 	tea "charm.land/bubbletea/v2"
 )
 
+var _ tea.Model = Model{}
 type Model struct {
-	loading 	bool
-	critical 	bool
+	activeMode 	common.UIMode
 
-	initParams 	common.InitParams
-	initCmd		tea.Cmd
+	profile 	cfg.Profile
+	keybinds 	cfg.Keybinds
 	theme		colors.Palette
 
-	components 	map[common.ComponentID]common.Component
+	components 	map[common.CompID]common.Component
 
 	width		int
 	height		int
 }
 
-
-func fromConfig(config cfg.Config) common.InitParams {
-	return common.InitParams{
-		Profile:  config.Profile,
-		Keybinds: config.Keybinds,
-		Warnings: config.Warnings,
-	}
-}
-
-func (model Model) Init() tea.Cmd {
-	return model.initCmd
+func (model Model) Init() (tea.Cmd) { 
+	//return func() tea.Msg { return common.AddCriticalToast{Item : "test shmest", Timeout : opt.Set(5 * time.Second)} } 
+	return nil
 }
 
 func (model Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	var cmd, updateCmd tea.Cmd
-    switch msg := msg.(type) {
-	case common.AddCriticalToast:
-		model.critical = true
-		updateCmd = func() tea.Msg {
+	var cmd tea.Cmd
+    switch msgT := msg.(type) {
+	/*case common.AddCriticalToast:
+		model.activeMode = common.Critical
+		msg = tea.Batch(msg, func() tea.Msg {
 			return common.AddInfoToast{
 				Item: fmt.Sprintf("Critical failure, press %s to exit", 
-					model.initParams.Keybinds.Quit.Get()[0].Help().Key),
+					model.keybinds.Quit.Get()[0].Help().Key),
 				Timeout: opt.Set(time.Duration(0)),
 			}
-		}
+		})*/
 	case tea.WindowSizeMsg:
-		model.width, model.height = msg.Width, msg.Height
+		model.width, model.height = msgT.Width, msgT.Height
     case tea.KeyPressMsg:
-		switch msg.String() {
+		switch msgT.String() {
 		case "q", "ctrl+c":
 			return model, tea.Quit
 		}
-	case common.CompleteLoadingMsg:
-		model.loading = false
     }
 
-	var updated common.Component
-	for id, component := range model.components {
-		updated, cmd = component.Update(msg);
-		model.components[id] = updated
-		if cmd != nil {
-			updateCmd = tea.Batch(updateCmd, cmd)
-		}
+	var compCmd tea.Cmd
+	for _, component := range(model.components) {
+		compCmd = component.Update(msg);
+		if compCmd != nil { cmd = tea.Batch(cmd, compCmd) }
 	}
-    return model, updateCmd
+    return model, cmd
 }
