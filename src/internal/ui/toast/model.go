@@ -11,7 +11,7 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
-var _ common.Component = &Model{}
+var _ common.Component = (*Model)(nil)
 type Model struct {
 	items		[]entry
 	silentMode	bool

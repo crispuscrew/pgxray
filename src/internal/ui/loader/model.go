@@ -7,7 +7,7 @@ import (
 	"charm.land/bubbles/v2/progress"
 )
 
-var _ common.Component = &Model{}
+var _ common.Component = (*Model)(nil)
 type Model struct {
 	Desc		string
 	bar     	progress.Model

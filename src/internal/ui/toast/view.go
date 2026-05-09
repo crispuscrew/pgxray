@@ -9,7 +9,7 @@ import (
 )
 
 
-func (model Model) View() string {
+func (model *Model) View() string {
 	if len(model.items) == 0 {
 		return ""
 	}

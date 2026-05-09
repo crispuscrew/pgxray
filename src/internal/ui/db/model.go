@@ -12,12 +12,12 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
-var _ common.Component = &Model{}
+var _ common.Component = (*Model)(nil)
 type Model struct {
 	conn *db.Conn
 }
 
-func (model Model) Update(msg tea.Msg) tea.Cmd {
+func (model *Model) Update(msg tea.Msg) tea.Cmd {
 	switch msg := msg.(type) {
 	case ConnectedMsg:
 		model.conn = msg.Conn

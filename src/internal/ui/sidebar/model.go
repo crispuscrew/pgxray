@@ -8,6 +8,7 @@ import (
 	tea "charm.land/bubbletea/v2"
 )
 
+var _ common.Component = (*Model)(nil)
 type Model struct {
 	DisplayNodes	[]DisplayNode
 	TabSize 		int
@@ -16,12 +17,8 @@ type Model struct {
 	SelectedID 		opt.Opt[int]
 }
 
-func (model Model) Init(initParams common.InitParams, theme colors.Palette) (common.Component, tea.Cmd) {
-	return model, nil
-}
-
-func (model Model) Update(msg tea.Msg) (common.Component, tea.Cmd) {
-	return model, nil
+func (model *Model) Update(msg tea.Msg) tea.Cmd {
+	return nil
 }
 
 type DisplayNode struct {

@@ -1,5 +1,5 @@
 package db
 
-func (Model) View() string {
+func (*Model) View() string {
 	return ""
 }
