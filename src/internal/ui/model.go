@@ -6,6 +6,7 @@ import (
 	
 	"github.com/crispuscrew/pgxray/internal/ui/colors"
 	"github.com/crispuscrew/pgxray/internal/ui/common"
+	"github.com/crispuscrew/pgxray/internal/ui/loader"
 
 	//"fmt"
 	"time"
@@ -28,8 +29,11 @@ type Model struct {
 }
 
 func (model Model) Init() (tea.Cmd) { 
-	//return func() tea.Msg { return common.AddCriticalToast{Item : "test shmest", Timeout : opt.Set(5 * time.Second)} } 
-	return nil
+	cmds := []tea.Cmd{
+		common.Cmd(common.AddCriticalToast{Item : "test shmest", Timeout : opt.Set(5 * time.Second)}), 
+		common.Cmd(loader.SetProgress{ Percent : 0.5 }),
+	}
+	return tea.Batch(cmds...)
 }
 
 func (model Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {

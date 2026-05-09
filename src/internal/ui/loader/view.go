@@ -1,5 +1,6 @@
 package loader
 
 func (model Model) View() string {
-	return "Connecting...\t" + model.bar.View()
+	if model.Desc != "" { return model.Desc + "\t" + model.bar.View() }
+	return model.bar.View()
 }

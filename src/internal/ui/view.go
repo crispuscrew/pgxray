@@ -18,8 +18,8 @@ func (model Model) View() tea.View {
 	switch model.activeMode {
 	case common.Init:
 		view = tea.NewView(
-			model.components[common.ToastID].View(),
-			//model.components[common.LoaderID].View(),
+			model.components[common.ToastID].View() +
+			model.components[common.LoaderID].View(),
 		)
 	case common.Critical:
 		view = tea.NewView(model.components[common.ToastID].View())

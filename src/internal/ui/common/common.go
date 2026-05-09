@@ -18,3 +18,7 @@ func After(timeout time.Duration, msg tea.Msg) tea.Cmd {
 		return msg
 	}
 }
+
+func Cmd(msg tea.Msg) tea.Cmd {
+	return func ()tea.Msg { return msg }
+}

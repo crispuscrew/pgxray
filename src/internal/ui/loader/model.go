@@ -9,8 +9,14 @@ import (
 
 var _ common.Component = &Model{}
 type Model struct {
+	Desc		string
 	bar     	progress.Model
 	realPct  	float64
+}
+
+func (model *Model) Init() *Model {
+	model.bar = progress.New()
+	return model
 }
 
 func (model *Model) Update(msg tea.Msg) tea.Cmd {
@@ -22,7 +28,7 @@ func (model *Model) Update(msg tea.Msg) tea.Cmd {
 			return func() tea.Msg { return common.CompleteLoading{} }
 		}
 		return cmd
-	case ProgressMsg:
+	case SetProgress:
 		model.realPct = msg.Percent
 		return model.bar.SetPercent(msg.Percent)
 	default:
@@ -30,4 +36,4 @@ func (model *Model) Update(msg tea.Msg) tea.Cmd {
 	}
 }
 
-type ProgressMsg struct {Percent float64}
+type SetProgress struct {Percent float64}
