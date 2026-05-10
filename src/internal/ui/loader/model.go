@@ -3,37 +3,40 @@ package loader
 import (
 	"github.com/crispuscrew/pgxray/internal/ui/common"
 
-	tea "charm.land/bubbletea/v2"
 	"charm.land/bubbles/v2/progress"
+	tea "charm.land/bubbletea/v2"
 )
 
 var _ common.Component = (*Model)(nil)
 type Model struct {
-	Desc		string
-	bar     	progress.Model
-	realPct  	float64
+	Desc	string
+	bar		progress.Model
+	pct		float64
 }
 
-func (model *Model) Init() *Model {
+func (model *Model) Init() tea.Cmd {
 	model.bar = progress.New()
-	return model
+	return nil
 }
 
 func (model *Model) Update(msg tea.Msg) tea.Cmd {
-	switch msg := msg.(type) {
+	switch msgT := msg.(type) {
 	case progress.FrameMsg:
-		updated, cmd := model.bar.Update(msg)
+		updated, cmd := model.bar.Update(msgT)
 		model.bar = updated
-		if cmd == nil && model.realPct >= 1.0 {
+		if cmd == nil && model.pct >= 1.0 {
 			return func() tea.Msg { return common.CompleteLoading{} }
 		}
 		return cmd
 	case SetProgress:
-		model.realPct = msg.Percent
-		return model.bar.SetPercent(msg.Percent)
+		model.pct = msgT.Pct
+		return model.bar.SetPercent(msgT.Pct)
+	case tea.WindowSizeMsg:
+		model.bar = progress.New(progress.WithWidth(msgT.Width / 2))
+		return model.bar.SetPercent(model.pct)
 	default:
 		return nil
 	}
 }
 
-type SetProgress struct {Percent float64}
+type SetProgress struct {Pct float64}

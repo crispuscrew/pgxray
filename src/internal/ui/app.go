@@ -7,8 +7,8 @@ import (
 	"github.com/crispuscrew/pgxray/internal/ui/colors"
 	"github.com/crispuscrew/pgxray/internal/ui/common"
 
-	"github.com/crispuscrew/pgxray/internal/ui/toast"
 	"github.com/crispuscrew/pgxray/internal/ui/loader"
+	"github.com/crispuscrew/pgxray/internal/ui/toast"
 
 	tea "charm.land/bubbletea/v2"
 
@@ -25,7 +25,7 @@ func RunUI(config cfg.Config) {
 	}
 
 	model.components = map[common.CompID]common.Component {
-		common.LoaderID	: (&loader.Model{Desc : "Loading..."}).Init(),
+		common.LoaderID	: &loader.Model{Desc : "Loading... "},
 		common.ToastID 	: &toast.Model{Theme : &model.theme},
 	}
 

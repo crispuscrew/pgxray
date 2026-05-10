@@ -3,8 +3,8 @@ package toast
 import (
 	"github.com/crispuscrew/pgxray/internal/opt"
 
-	"github.com/crispuscrew/pgxray/internal/ui/common"
 	"github.com/crispuscrew/pgxray/internal/ui/colors"
+	"github.com/crispuscrew/pgxray/internal/ui/common"
 
 	"time"
 
@@ -16,6 +16,10 @@ type Model struct {
 	items		[]entry
 	silentMode	bool
 	Theme		*colors.Palette
+}
+
+func (model *Model) Init() tea.Cmd {
+	return nil
 }
 
 func (model *Model) Update(msg tea.Msg) tea.Cmd {

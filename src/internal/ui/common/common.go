@@ -7,6 +7,7 @@ import (
 )
 
 type Component interface {
+	Init() tea.Cmd
 	Update(msg tea.Msg) tea.Cmd
 	View() string
 }

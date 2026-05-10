@@ -17,21 +17,25 @@ type Model struct {
 	conn *db.Conn
 }
 
+func (model *Model) Init() tea.Cmd {
+	return nil
+}
+
 func (model *Model) Update(msg tea.Msg) tea.Cmd {
 	switch msg := msg.(type) {
 	case ConnectedMsg:
 		model.conn = msg.Conn
 		return tea.Batch(
-			func() tea.Msg { return loader.ProgressMsg{Percent: 0.35} },
+			func() tea.Msg { return loader.SetProgress{Pct: 0.35} },
 			common.After(3 * time.Second, SchemasMsg{}),
 		)
 	case SchemasMsg:
 		return tea.Batch(
-			func() tea.Msg { return loader.ProgressMsg{Percent: 0.7} },
+			func() tea.Msg { return loader.SetProgress{Pct: 0.7} },
 			common.After(3 * time.Second, DatabaseReadyMsg{}),
 		)
 	case DatabaseReadyMsg:
-		return func() tea.Msg { return loader.ProgressMsg{Percent: 1.0} }
+		return func() tea.Msg { return loader.SetProgress{Pct: 1.0} }
 	}
 	return nil
 }

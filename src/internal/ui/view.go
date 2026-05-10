@@ -3,8 +3,8 @@ package ui
 import (
 	"github.com/crispuscrew/pgxray/internal/ui/common"
 
-	//"charm.land/lipgloss/v2" // for future styling
 	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 )
 
 /*
@@ -17,10 +17,12 @@ func (model Model) View() tea.View {
 	var view tea.View
 	switch model.activeMode {
 	case common.Init:
-		view = tea.NewView(
-			model.components[common.ToastID].View() +
+		centered := lipgloss.Place(
+			model.width, model.height,
+			lipgloss.Center, lipgloss.Center,
 			model.components[common.LoaderID].View(),
 		)
+		view = tea.NewView(model.components[common.ToastID].View() + centered)
 	case common.Critical:
 		view = tea.NewView(model.components[common.ToastID].View())
 	default:

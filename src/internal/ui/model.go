@@ -2,14 +2,11 @@ package ui
 
 import (
 	"github.com/crispuscrew/pgxray/internal/cfg"
-	"github.com/crispuscrew/pgxray/internal/opt"
-	
+
 	"github.com/crispuscrew/pgxray/internal/ui/colors"
 	"github.com/crispuscrew/pgxray/internal/ui/common"
-	"github.com/crispuscrew/pgxray/internal/ui/loader"
 
 	//"fmt"
-	"time"
 
 	tea "charm.land/bubbletea/v2"
 )
@@ -28,10 +25,10 @@ type Model struct {
 	height		int
 }
 
-func (model Model) Init() (tea.Cmd) { 
-	cmds := []tea.Cmd{
-		common.Cmd(common.AddCriticalToast{Item : "test shmest", Timeout : opt.Set(5 * time.Second)}), 
-		common.Cmd(loader.SetProgress{ Percent : 0.5 }),
+func (model Model) Init() (tea.Cmd) {
+	cmds := []tea.Cmd{}
+	for _, component := range(model.components) {
+		cmds = append(cmds, component.Init())
 	}
 	return tea.Batch(cmds...)
 }
